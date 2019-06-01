@@ -8,14 +8,23 @@
 #ifndef INTERFACE
 #define INTERFACE
 
-#define DEFAULT_I 1
+#define DEFAULT_L  100000
+#define DEFAULT_K  0.01
+#define DEFAULT_G  0.5
+#define DEFAULT_LL 70
 
 /* define argument container */
 typedef struct args{
   char    h; /* help message?         */
   char    v; /* version message?      */
+  char    d; /* print divergence val. */
   char  err; /* error                 */
-  int     i; /* iterations            */
+  int     l; /* sequence length       */
+  int     s; /* seed for random num.  */
+  int     L; /* line length           */
+  float   k; /* substitutions         */
+  float   D; /* divergence            */
+  float   g; /* GC content            */
   char **fi; /* input files           */
   int    nf; /* number of input files */
 } Args;

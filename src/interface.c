@@ -18,7 +18,13 @@ Args *newArgs() {
   args->h   = 0;
   args->v   = 0;
   args->err = 0;
-  args->i   = DEFAULT_I;
+  args->d   = 0;
+  args->l   = DEFAULT_L;
+  args->k   = DEFAULT_K;
+  args->D   = 0.;
+  args->g   = DEFAULT_G;
+  args->s   = 0;
+  args->L   = DEFAULT_LL;
   return args;
 }
 
@@ -28,13 +34,28 @@ void freeArgs(Args *args) {
 
 Args *getArgs(int argc, char *argv[]) {
   int c;
-  char *optString = "hvi:";
+  char *optString = "hvdl:k:D:g:s:L:";
   Args *args = newArgs();
 
   while ((c = getopt(argc, argv, optString)) != -1) {
     switch(c) {
-    case 'i': /* iterations */
-      args->i = atoi(optarg);
+    case 'l': /* iterations */
+      args->l = atoi(optarg);
+      break;
+    case 'k': /* substitutions */
+      args->k = atof(optarg);
+      break;
+    case 'D': /* divergence */
+      args->D = atof(optarg);
+      break;
+    case 'g': /* GC content */
+      args->g = atof(optarg);
+      break;
+    case 's': /* random number seed */
+      args->s = atoi(optarg);
+      break;
+    case 'L': /* line length */
+      args->L = atoi(optarg);
       break;
     case 'h': /* help       */
       args->h = 1;
@@ -63,10 +84,16 @@ Args *getArgs(int argc, char *argv[]) {
 
 void printUsage() {
   printf("Usage: %s [options] [inputFiles]\n", progname());
-  printf("<DESCRIPTION>\n");
-  printf("Example: %s -i 2\n", progname());
+  printf("Simulate a pair of related DNA sequences\n");
+  printf("Example: %s\n", progname()); 
   printf("Options:\n");
-  printf("\t[-i <NUM> iterations; default: %d]\n", DEFAULT_I);
+  printf("\t[-l <INTEGER> generate sequences of length INTEGER; default: %d]\n", DEFAULT_L);
+  printf("\t[-k <FLOAT> introduce FLOAT substitutions / site; default: %.2f]\n", DEFAULT_K);
+  printf("\t[-D <FLOAT> create divergence of FLOAT (replaces -k)]\n");
+  printf("\t[-g <FLOAT> sequences have FLOAT gc content; default: %.2f]\n", DEFAULT_G);
+  printf("\t[-s <INTEGER> use INTEGER as seed for random number; default: system]\n");
+  printf("\t[-L <INTEGER> print lines of length INTEGER; default: %d]\n", DEFAULT_LL);
+  printf("\t[-d print divergence values; default: sequence only]\n");
   printf("\t[-h print this help message and exit]\n");
   printf("\t[-v print version & program information and exit]\n");
   exit(0);

@@ -2,7 +2,7 @@
 ## Author
 Bernhard Haubold, `haubold@evolbio.mpg.de`
 ## Description
-DESCRIPTION
+Simulate a pair of sequences separated by K substitutions per site.
 ## Compile
 Compile the sources using `make`; the executable `simK` is now in the directory `build`
 ## Documentation
