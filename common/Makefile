@@ -1,6 +1,6 @@
 CF  = -O3 -Wall -Wshadow -pedantic -std=gnu99 -g
 CC  = gcc $(CF)
-OBJ = eprintf.o ran.o
+OBJ = eprintf.o gsl_rng.o
 libcommon.a: $(OBJ)
 	ar -cvq $@ $^
 	ranlib $@

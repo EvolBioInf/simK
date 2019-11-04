@@ -12,23 +12,21 @@
 #include <math.h>
 #include "interface.h"
 #include "eprintf.h"
-#include "ran.h"
+#include "gsl_rng.h"
 
-char getNuc(float gc){
+char getNuc(float gc, gsl_rng *ran){
   char c;
   float r;
-
-  r = genrand_real1();
+  r = gsl_rng_uniform(ran);
   if(r < gc){
-    r = genrand_real1();
+    r = gsl_rng_uniform(ran);
     if(r < 0.5){
       c = 'G';
     }else{
       c = 'C';
     }
   }else{
-    r = genrand_real1();
-
+    r = gsl_rng_uniform(ran);
     if(r < 0.5){
       c = 'A';
     }else{
@@ -40,7 +38,7 @@ char getNuc(float gc){
 
 int main(int argc, char *argv[]){
   Args *args = getArgs(argc, argv);
-  int seed, n;
+  int n;
   char c, counter = 0;
 
   setprogname2(argv[0]);
@@ -48,28 +46,23 @@ int main(int argc, char *argv[]){
     printSplash(args);
   if(args->h || args->err)
     printUsage();
-  if (args->s)
-    seed = args->s;
-  else
-    seed = (unsigned int)((unsigned) time(NULL) + getpid());
-  init_genrand(seed);
+  gsl_rng *ran = ini_gsl_rng(args);
   char **seq = (char **)emalloc(2*sizeof(char *));
   seq[0] = (char *)emalloc((args->l+1)*sizeof(char));
   seq[1] = (char *)emalloc((args->l+1)*sizeof(char));
   /* generate "ancestral sequence" */
   for(int i=0;i<args->l;i++){
-    seq[0][i] = getNuc(args->g);
+    seq[0][i] = getNuc(args->g, ran);
     seq[1][i] = seq[0][i];
   }
   /* mutate sequence */
-
   n = (int)(-3.0/4.0*(1-log(4.0/3.0*args->D))*args->l+0.5);
   if(args->D < 0){
     n = (int)(args->l*args->k+0.5);
     for(int i=0;i<n;i++){
-      int p = genrand_real1()*args->l;
+      int p = (int)(gsl_rng_uniform(ran)*args->l);
       c = seq[0][p];
-      while((c = getNuc(args->g)) == seq[0][p])
+      while((c = getNuc(args->g, ran)) == seq[0][p])
 	;
       seq[0][p] = c;
     }
@@ -77,10 +70,10 @@ int main(int argc, char *argv[]){
     counter = 0;
     n = args->D * args->l + 0.5;
     while(counter < n){
-      int p = genrand_real1()*args->l;
+      int p = (int)(gsl_rng_uniform(ran)*args->l);
       if(seq[0][p] == seq[1][p]){
 	counter++;
-	while((c = getNuc(args->g)) == seq[0][p])
+	while((c = getNuc(args->g, ran)) == seq[0][p])
 	  ;
 	seq[0][p] = c;
       }
@@ -112,7 +105,7 @@ int main(int argc, char *argv[]){
   free(seq[0]);
   free(seq[1]);
   free(seq);
-
+  gsl_rng_free(ran);
   return 0;
 }
 

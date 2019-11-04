@@ -21,7 +21,7 @@ Args *newArgs() {
   args->d   = 0;
   args->l   = DEFAULT_L;
   args->k   = DEFAULT_K;
-  args->D   = 0.;
+  args->D   = -1.0;
   args->g   = DEFAULT_G;
   args->s   = 0;
   args->L   = DEFAULT_LL;

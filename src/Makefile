@@ -5,7 +5,7 @@ CFLAGS         = -DVERSION=\"$(VERSION)\" -DDATE=\"$(DATE)\" -O3 -Wall -Wshadow 
 
 SRCFILES  = simK.c interface.c
 OBJFILES  = simK.o interface.o
-LIBS      = -lcommon -lm
+LIBS      = -lcommon -lm -lgsl -lblas
 EXECFILE  = simK
 
 .PHONY : all
